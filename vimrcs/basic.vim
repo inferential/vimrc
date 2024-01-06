@@ -127,9 +127,27 @@ endif
 " Add a bit extra margin to the left
 set foldcolumn=1
 
+" Relative numbers
+set relativenumber
+
+" Highlight line
+set cursorline 
+
+" Copy to clipboard (macOS)
+if has('macunix')
+    set clipboard=unnamed
+elseif has('unix')
+    set clipboard=unnamedplus
+endif
+
+" Mouse
+set mouse=a
+
+" Code folding
+set foldmethod=indent " choices are: default|indent|syntax
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
+" => Colours and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
 syntax enable
@@ -137,13 +155,13 @@ syntax enable
 " Set regular expression engine automatically
 set regexpengine=0
 
-" Enable 256 colors palette in Gnome Terminal
+" Enable 256 colour palette in Gnome Terminal
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
 try
-    colorscheme desert
+    colorscheme hybrid " https://github.com/w0ng/vim-hybrid/ 
 catch
 endtry
 
@@ -266,16 +284,36 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " Always show the status line
 set laststatus=2
 
+" Current mode
+let g:currentmode={
+    \ 'n'  : 'NORMAL',
+    \ 'no' : 'NORMAL,OP',
+    \ 'v'  : 'VISUAL',
+    \ 'V'  : 'V-LINE',
+    \ '^V' : 'V-BLOCK',
+    \ 's'  : 'SELECT',
+    \ 'S'  : 'S-LINE',
+    \ '^S' : 'S-BLOCK',
+    \ 'i'  : 'INSERT',
+    \ 'R'  : 'REPLACE',
+    \ 'Rv' : 'V-REPLACE',
+    \ 'c'  : 'COMMAND',
+    \ 'cv' : 'VIM EX',
+    \ 'ce' : 'EX',
+    \ 'r'  : 'PROMPT',
+    \ 'rm' : 'MORE',
+    \ 'r?' : 'CONFIRM',
+    \ '!'  : 'SHELL',
+    \ 't'  : 'TERMINAL'
+    \}
+
 " Format the status line
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
-
+set statusline+=\ %{g:currentmode[mode()]}\  " The current mode
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remap VIM 0 to first non-blank character
-map 0 ^
-
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
@@ -315,6 +353,11 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
+" Spell dict 
+set spell spelllang=en_gb
+
+" Enable spell checking
+set spell
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -331,6 +374,8 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
+" Indicate insert mode
+autocmd InsertEnter,InsertLeave * set cul!
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
