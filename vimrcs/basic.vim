@@ -160,8 +160,13 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
+" Check if the colour scheme file exists
+if !filereadable(expand("~/.vim/colors/gruvbox.vim"))
+  " If it doesn't exist, download it 
+  silent !git clone https://github.com/morhetz/gruvbox.git ~/.vim/pack/default/start/gruvbox
+endif
 try
-    colorscheme hybrid " https://github.com/w0ng/vim-hybrid/ 
+    colorscheme gruvbox 
 catch
 endtry
 
