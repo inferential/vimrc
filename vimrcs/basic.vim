@@ -62,8 +62,12 @@ if !filereadable(expand("~/.vim/autoload/plug.vim"))
 endif
 
 call plug#begin("~/.vim/plugged")
-Plug 'dense-analysis/ale' " Check syntax in Vim/Neovim asynchronously and fix files, with Language Server Protocol (LSP) support 
-Plug 'JuliaEditorSupport/julia-vim' " Vim support for Julia
+    Plug 'JuliaEditorSupport/julia-vim' " Vim support for Julia
+    Plug 'mattn/vim-lsp-settings'
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'machakann/vim-lsp-julia'
 call plug#end()
 
 
