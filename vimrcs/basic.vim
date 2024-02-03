@@ -11,6 +11,7 @@
 "
 " Sections:
 "    -> General
+"    -> Plugins
 "    -> VIM user interface
 "    -> Colors and Fonts
 "    -> Files and backups
@@ -51,6 +52,19 @@ nmap <leader>w :w!<cr>
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !filereadable(expand("~/.vim/autoload/plug.vim"))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+call plug#begin("~/.vim/plugged")
+Plug 'dense-analysis/ale' " Check syntax in Vim/Neovim asynchronously and fix files, with Language Server Protocol (LSP) support 
+Plug 'JuliaEditorSupport/julia-vim' " Vim support for Julia
+call plug#end()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -160,8 +174,8 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-" Check if the colour scheme file exists
-if !filereadable(expand("~/.vim/colors/gruvbox.vim"))
+" Check if the Gruvbox colour scheme file exists
+if !isdirectory(expand("~/.vim/pack/default/start/gruvbox/"))
   " If it doesn't exist, download it 
   silent !git clone https://github.com/morhetz/gruvbox.git ~/.vim/pack/default/start/gruvbox
 endif
