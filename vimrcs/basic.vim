@@ -53,6 +53,9 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
+" Highlight on hover 
+autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins 
@@ -68,11 +71,17 @@ call plug#begin("~/.vim/plugged")
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-flagship'
     Plug 'tpope/vim-jdaddy' " `aj` provides a text object for the outermost JSON object, array, string, number, or keyword. `gqaj` pretty prints (wraps/indents/sorts keys/otherwise cleans up) the JSON construct under the cursor. `gwaj` takes the JSON object on the clipboard and extends it into the JSON object under the cursor.
-    Plug 'JuliaEditorSupport/julia-vim' 
     Plug 'mattn/vim-lsp-settings'
     Plug 'prabirshrestha/asyncomplete.vim'
     Plug 'prabirshrestha/vim-lsp'
     Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'ervandew/supertab'
+    Plug 'jpalardy/vim-slime'
+    Plug 'klafyvel/vim-slime-cells'
+    Plug 'psf/black', { 'branch': 'stable' }
+    Plug 'nvie/vim-flake8'
+    Plug 'fisadev/vim-isort'
+    Plug 'JuliaEditorSupport/julia-vim' 
     Plug 'machakann/vim-lsp-julia'
 call plug#end()
 
@@ -80,6 +89,52 @@ call plug#end()
 set laststatus=2
 set showtabline=2
 set guioptions-=e
+
+" Shift+k to display function documentation
+nnoremap <S-k> :LspHover<CR>
+
+" Python tools
+" https://github.com/psf/black/issues/655
+" let g:black_virtualenv = "$HOME/.base"
+augroup black_on_save
+  autocmd!
+  autocmd BufWritePre *.py Black
+augroup end
+let g:flake8_show_in_gutter = 1
+let g:flake8_show_in_file=1
+autocmd BufWritePost *.py call flake8#Flake8()
+autocmd BufWritePost *.py !isort <afile>
+" Python tools
+
+" vim-slime
+let g:slime_target = "tmux"
+let g:slime_dont_ask_default = 1
+nmap <c-c>v <Plug>SlimeConfig
+let g:slime_cell_delimiter = "# %%"
+let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.1"}
+let g:slime_bracketed_paste = 0 " Disabled to avoid ipython issues
+function! _EscapeText_python(text)
+  if slime#config#resolve("python_ipython") && len(split(a:text,"\n")) > 1
+    return ["%cpaste -q\n", slime#config#resolve("dispatch_ipython_pause"), a:text, "--\n"]
+  else
+    let empty_lines_pat = '\(^\|\n\)\zs\(\s*\n\+\)\+'
+    let no_empty_lines = substitute(a:text, empty_lines_pat, "", "g")
+    let dedent_pat = '\(^\|\n\)\zs'.matchstr(no_empty_lines, '^\s*')
+    let dedented_lines = substitute(no_empty_lines, dedent_pat, "", "g")
+    let except_pat = '\(elif\|else\|except\|finally\)\@!'
+    let add_eol_pat = '\n\s[^\n]\+\n\zs\ze\('.except_pat.'\S\|$\)'
+    return substitute(dedented_lines, add_eol_pat, "\n", "g")
+  end
+endfunction
+" Vim-slime
+
+" vim-slime-cells
+nmap <c-c><c-c> <Plug>SlimeCellsSendAndGoToNext
+nmap <c-c><c-Down> <Plug>SlimeCellsNext
+nmap <c-c><c-Up> <Plug>SlimeCellsPrev
+
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
