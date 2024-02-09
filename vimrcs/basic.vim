@@ -62,13 +62,24 @@ if !filereadable(expand("~/.vim/autoload/plug.vim"))
 endif
 
 call plug#begin("~/.vim/plugged")
-    Plug 'JuliaEditorSupport/julia-vim' " Vim support for Julia
+    Plug 'machakann/vim-highlightedyank'
+    Plug 'tpope/vim-surround' 
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-flagship'
+    Plug 'tpope/vim-jdaddy' " `aj` provides a text object for the outermost JSON object, array, string, number, or keyword. `gqaj` pretty prints (wraps/indents/sorts keys/otherwise cleans up) the JSON construct under the cursor. `gwaj` takes the JSON object on the clipboard and extends it into the JSON object under the cursor.
+    Plug 'JuliaEditorSupport/julia-vim' 
     Plug 'mattn/vim-lsp-settings'
     Plug 'prabirshrestha/asyncomplete.vim'
     Plug 'prabirshrestha/vim-lsp'
     Plug 'prabirshrestha/asyncomplete-lsp.vim'
     Plug 'machakann/vim-lsp-julia'
 call plug#end()
+
+" vim-flagship
+set laststatus=2
+set showtabline=2
+set guioptions-=e
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -185,6 +196,11 @@ if !isdirectory(expand("~/.vim/pack/default/start/gruvbox/"))
 endif
 try
     colorscheme gruvbox 
+    let g:gruvbox_contrast_dark = 'hard' 
+    let g:gruvbox_italicize_strings = 1
+    let g:gruvbox_italic = 1
+    let g:gruvbox_improved_strings = 1
+    let g:gruvbox_improved_warnings = 1
 catch
 endtry
 
@@ -381,6 +397,12 @@ set spell spelllang=en_gb
 
 " Enable spell checking
 set spell
+
+" Spelling mistakes will be colored up red.
+hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellCap cterm=underline ctermfg=203 guifg=#ff5f5f
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
