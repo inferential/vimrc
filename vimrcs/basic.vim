@@ -42,6 +42,7 @@ filetype indent on
 set autoread
 au FocusGained,BufEnter * silent! checktime
 
+set numberwidth=6
 " Column indicating 88 characters
 set colorcolumn=88
 
@@ -75,7 +76,8 @@ if !filereadable(expand("~/.vim/autoload/plug.vim"))
 endif
 
 call plug#begin("~/.vim/plugged")
-    Plug 'nanotech/jellybeans.vim'
+    Plug 'ap/vim-css-color'
+    Plug 'junegunn/seoul256.vim'
     Plug 'machakann/vim-highlightedyank'
     Plug 'tpope/vim-surround' 
     Plug 'tpope/vim-fugitive'
@@ -123,6 +125,7 @@ let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file=1
 autocmd BufWritePost *.py call flake8#Flake8()
 autocmd BufWritePost *.py !isort <afile>
+autocmd BufWritePost *.py !mypy <afile>
 autocmd FileType python setlocal omnifunc=lsp#complete
 " Python tools
 
@@ -277,18 +280,17 @@ endif
 if exists("$TMUX")
         set t_Co=256
         set notermguicolors
-else
+elseif has("termguicolors")
         set termguicolors
 endif
 
 set background=dark
-colorscheme jellybeans
-let g:jellybeans_overrides = {
-\    'MatchParen': { 'guifg': 'dd0093', 'guibg': '000000',
-\                    'ctermfg': 'Magenta', 'ctermbg': '' },
-\}
-let g:jellybeans_use_term_italics = 1
-set guifont=Monaco:h12 noanti
+" seoul256 (dark):
+"   Range:   233 (darkest) ~ 239 (lightest)
+"   Default: 237
+let g:seoul256_background = 233 
+let g:seoul256_srgb = 0
+colorscheme seoul256
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -333,7 +335,7 @@ set tw=500
 
 set ai "Auto indent
 set si "Smart indent
-set wrap "Wrap lines
+" set wrap "Wrap lines
 
 
 """"""""""""""""""""""""""""""
