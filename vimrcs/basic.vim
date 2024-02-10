@@ -53,9 +53,16 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
-" Highlight on hover 
+" Highlight for 1000 msec on hover 
+set updatetime=1000
 autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+autocmd CursorHold,CursorHoldI * match none
 
+" Omnicomplete
+set omnifunc=syntaxcomplete#Complete
+
+" Replace all instances selected in Visual mode, using Ctrl+r
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins 
@@ -65,6 +72,7 @@ if !filereadable(expand("~/.vim/autoload/plug.vim"))
 endif
 
 call plug#begin("~/.vim/plugged")
+    Plug 'nanotech/jellybeans.vim'
     Plug 'machakann/vim-highlightedyank'
     Plug 'tpope/vim-surround' 
     Plug 'tpope/vim-fugitive'
@@ -104,6 +112,7 @@ let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file=1
 autocmd BufWritePost *.py call flake8#Flake8()
 autocmd BufWritePost *.py !isort <afile>
+autocmd FileType python setlocal omnifunc=lsp#complete
 " Python tools
 
 " vim-slime
@@ -230,6 +239,15 @@ set mouse=a
 " Code folding
 set foldmethod=indent " choices are: default|indent|syntax
 
+" Automatic bracket close
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colours and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -244,22 +262,14 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-" Check if the Gruvbox colour scheme file exists
-if !isdirectory(expand("~/.vim/pack/default/start/gruvbox/"))
-  " If it doesn't exist, download it 
-  silent !git clone https://github.com/morhetz/gruvbox.git ~/.vim/pack/default/start/gruvbox
-endif
-try
-    colorscheme gruvbox 
-    let g:gruvbox_contrast_dark = 'hard' 
-    let g:gruvbox_italicize_strings = 1
-    let g:gruvbox_italic = 1
-    let g:gruvbox_improved_strings = 1
-    let g:gruvbox_improved_warnings = 1
-catch
-endtry
-
 set background=dark
+colorscheme jellybeans
+let g:jellybeans_overrides = {
+\    'MatchParen': { 'guifg': 'dd0093', 'guibg': '000000',
+\                    'ctermfg': 'Magenta', 'ctermbg': '' },
+\}
+let g:jellybeans_use_term_italics = 1
+set guifont=Monaco:h12 noanti
 
 " Set extra options when running in GUI mode
 if has("gui_running")
