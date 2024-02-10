@@ -262,6 +262,14 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
+" 256 colour support for Vim in tmux
+if exists("$TMUX")
+        set t_Co=256
+        set notermguicolors
+else
+        set termguicolors
+endif
+
 set background=dark
 colorscheme jellybeans
 let g:jellybeans_overrides = {
