@@ -42,6 +42,9 @@ filetype indent on
 set autoread
 au FocusGained,BufEnter * silent! checktime
 
+" Column indicating 88 characters
+set colorcolumn=88
+
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = ","
@@ -79,11 +82,12 @@ call plug#begin("~/.vim/plugged")
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-flagship'
     Plug 'tpope/vim-jdaddy' " `aj` provides a text object for the outermost JSON object, array, string, number, or keyword. `gqaj` pretty prints (wraps/indents/sorts keys/otherwise cleans up) the JSON construct under the cursor. `gwaj` takes the JSON object on the clipboard and extends it into the JSON object under the cursor.
+    Plug 'prabirshrestha/vim-lsp'
     Plug 'mattn/vim-lsp-settings'
     Plug 'prabirshrestha/asyncomplete.vim'
-    Plug 'prabirshrestha/vim-lsp'
     Plug 'prabirshrestha/asyncomplete-lsp.vim'
     Plug 'ervandew/supertab'
+    Plug 'Tetralux/odin.vim'
     Plug 'jpalardy/vim-slime'
     Plug 'klafyvel/vim-slime-cells'
     Plug 'psf/black', { 'branch': 'stable' }
@@ -97,6 +101,13 @@ call plug#end()
 set laststatus=2
 set showtabline=2
 set guioptions-=e
+
+" vim-lsp configuration
+let g:asyncomplete_auto_popup = 1
+inoremap <silent><expr> <C-Space> asyncomplete#force_refresh()
+inoremap <silent><expr> <C-n> pumvisible() ? "\<C-n>" : asyncomplete#force_refresh()
+inoremap <silent><expr> <C-p> pumvisible() ? "\<C-p>" : asyncomplete#force_refresh()
+" vim-lsp configuration
 
 " Shift+k to display function documentation
 nnoremap <S-k> :LspHover<CR>
@@ -142,7 +153,7 @@ nmap <c-c><c-c> <Plug>SlimeCellsSendAndGoToNext
 nmap <c-c><c-Down> <Plug>SlimeCellsNext
 nmap <c-c><c-Up> <Plug>SlimeCellsPrev
 
-
+" Tab for completion
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 
