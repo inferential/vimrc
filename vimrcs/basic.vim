@@ -43,8 +43,8 @@ set autoread
 au FocusGained,BufEnter * silent! checktime
 
 set numberwidth=6
-" Column indicating 88 characters
-set colorcolumn=88
+" Column indicating 80 characters
+set colorcolumn=80
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -57,10 +57,11 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
-" Highlight for 1000 msec on hover 
+""" Highlight on hover 
 set updatetime=1000
 autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
 autocmd CursorHold,CursorHoldI * match none
+""" Highlight on hover 
 
 " Omnicomplete
 set omnifunc=syntaxcomplete#Complete
@@ -93,47 +94,59 @@ call plug#begin("~/.vim/plugged")
     Plug 'jpalardy/vim-slime'
     Plug 'klafyvel/vim-slime-cells'
     Plug 'psf/black', { 'branch': 'stable' }
-    Plug 'nvie/vim-flake8'
     Plug 'fisadev/vim-isort'
     Plug 'JuliaEditorSupport/julia-vim' 
     Plug 'machakann/vim-lsp-julia'
 call plug#end()
 
-" vim-flagship
+""" vim-flagship
 set laststatus=2
 set showtabline=2
 set guioptions-=e
+""" vim-flagship
 
-" vim-lsp configuration
+""" vim-lsp configuration
 let g:asyncomplete_auto_popup = 1
 inoremap <silent><expr> <C-Space> asyncomplete#force_refresh()
 inoremap <silent><expr> <C-n> pumvisible() ? "\<C-n>" : asyncomplete#force_refresh()
 inoremap <silent><expr> <C-p> pumvisible() ? "\<C-p>" : asyncomplete#force_refresh()
-" vim-lsp configuration
+let g:lsp_diagnostics_echo_cursor = 1
+""" vim-lsp configuration
 
 " Shift+k to display function documentation
 nnoremap <S-k> :LspHover<CR>
 
-" Python tools
+""" Python tools
 " https://github.com/psf/black/issues/655
 " let g:black_virtualenv = "$HOME/.base"
+" Black
 augroup black_on_save
   autocmd!
   autocmd BufWritePre *.py Black
 augroup end
-let g:flake8_show_in_gutter = 1
-let g:flake8_show_in_file=1
-autocmd BufWritePost *.py call flake8#Flake8()
+" 
+" Pylint
+set makeprg=pylint\ --reports=n\ --output-format=parseable\ %:p
+set errorformat=%f:%l:\ %m
+"
 autocmd BufWritePost *.py !isort <afile>
 autocmd BufWritePost *.py !mypy <afile>
 autocmd FileType python setlocal omnifunc=lsp#complete
-" Python tools
+""" Python tools
 
-" vim-slime
+""" vim-slime
 let g:slime_target = "tmux"
 let g:slime_dont_ask_default = 1
 nmap <c-c>v <Plug>SlimeConfig
 let g:slime_cell_delimiter = "# %%"
+" FIXME:
+" augroup SlimeCellDelimiter
+"     autocmd!
+"     " For Python files
+"     autocmd FileType python let g:slime_cell_delimiter = "# %%"
+"     " For Julia  files
+"     autocmd FileType julia let g:slime_cell_delimiter = "##"
+" augroup END
 let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.1"}
 let g:slime_bracketed_paste = 0 " Disabled to avoid ipython issues
 function! _EscapeText_python(text)
@@ -149,12 +162,13 @@ function! _EscapeText_python(text)
     return substitute(dedented_lines, add_eol_pat, "\n", "g")
   end
 endfunction
-" Vim-slime
+""" vim-slime
 
-" vim-slime-cells
+""" vim-slime-cells
 nmap <c-c><c-c> <Plug>SlimeCellsSendAndGoToNext
 nmap <c-c><c-Down> <Plug>SlimeCellsNext
 nmap <c-c><c-Up> <Plug>SlimeCellsPrev
+""" vim-slime-cells
 
 " Tab for completion
 let g:SuperTabDefaultCompletionType = "<c-n>"
