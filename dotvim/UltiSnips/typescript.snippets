@@ -1,0 +1,135 @@
+# TypeScript/Deno Snippets
+
+# For Loop
+snippet for "for loop"
+for (let ${1:i} = 0; $1 < ${2:array}.length; $1++) {
+	${3:// code}
+}
+endsnippet
+
+# While Loop
+snippet while "while loop"
+while (${1:condition}) {
+	${2:// code}
+}
+endsnippet
+
+# Do While Loop
+snippet dowhile "do while loop"
+do {
+	${1:// code}
+} while (${2:condition});
+endsnippet
+
+# Function
+snippet fun "function"
+function ${1:functionName}(${2:arguments}): ${3:returnType} {
+	${4:// function body}
+}
+endsnippet
+
+# Arrow Function
+snippet => "arrow function"
+(${1:arguments}) => {
+	${2:// function body}
+}
+endsnippet
+
+# Async Function
+snippet afun "async function"
+async function ${1:functionName}(${2:arguments}): Promise<${3:returnType}> {
+	${4:// function body}
+}
+endsnippet
+
+# If Statement
+snippet if "if statement"
+if (${1:condition}) {
+	${2:// code}
+}
+endsnippet
+
+# If-Else Statement
+snippet ife "if-else statement"
+if (${1:condition}) {
+	${2:// code}
+} else {
+	${3:// code}
+}
+endsnippet
+
+# Switch Statement
+snippet switch "switch statement"
+switch (${1:expression}) {
+	case ${2:value1}:
+		${3:// code}
+		break;
+	case ${4:value2}:
+		${5:// code}
+		break;
+	default:
+		${6:// code}
+}
+endsnippet
+
+# Try-Catch
+snippet try "try-catch block"
+try {
+	${1:// code}
+} catch (error) {
+	${2:// error handling}
+}
+endsnippet
+
+# Class
+snippet class "class definition"
+class ${1:ClassName} {
+	constructor(${2:arguments}) {
+		${3:// constructor body}
+	}
+
+	${4:// methods}
+}
+endsnippet
+
+# Deno.test
+snippet dtest "Deno test function"
+Deno.test("${1:test description}", () => {
+	${2:// test code}
+});
+endsnippet
+
+# Import statement
+snippet imp "import statement"
+import { ${1:module} } from "${2:path}";
+endsnippet
+
+# Console log
+snippet cl "console.log"
+console.log(${1:object});
+endsnippet
+
+# Deno-specific snippets
+
+# Read file
+snippet dread "Deno read file"
+const text = await Deno.readTextFile("${1:./file.txt}");
+endsnippet
+
+# Write file
+snippet dwrite "Deno write file"
+await Deno.writeTextFile("${1:./file.txt}", "${2:content}");
+endsnippet
+
+# Deno serve
+snippet dserve "Deno serve HTTP"
+import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
+
+serve((req) => new Response("Hello World\n"), { port: ${1:8000} });
+endsnippet
+
+# Deno fetch
+snippet dfetch "Deno fetch"
+const response = await fetch("${1:https://api.example.com/data}");
+const data = await response.json();
+endsnippet

@@ -43,8 +43,8 @@ set autoread
 au FocusGained,BufEnter * silent! checktime
 
 set numberwidth=6
-" Column indicating 80 characters
-set colorcolumn=80
+" Column indicating 100 characters
+set colorcolumn=100
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -58,10 +58,27 @@ nmap <leader>w :w!<cr>
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
 """ Highlight on hover 
-set updatetime=1000
-autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
-autocmd CursorHold,CursorHoldI * match none
+" set updatetime=1000
+" autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+" autocmd CursorHold,CursorHoldI * match none
 """ Highlight on hover 
+
+"""
+" Define a custom highlight group with a pale grey background
+highlight PaleGreyHighlight ctermbg=254 guibg=#e4e4e4
+" Set updatetime for responsiveness (1000ms = 1 second)
+set updatetime=1000
+" Function to escape special characters in the word
+function! EscapeWord(word)
+    return escape(a:word, '/\.*$^~[]')
+endfunction
+" Highlight word under cursor with pale grey
+autocmd CursorMoved * exe printf('match PaleGreyHighlight /\V\<%s\>/', EscapeWord(expand('<cword>')))
+" Clear highlight when cursor stops moving
+autocmd CursorHold,CursorHoldI * match none
+" Optionally, you can add these lines to make the highlight update more frequently in insert mode
+autocmd CursorMovedI * exe printf('match PaleGreyHighlight /\V\<%s\>/', EscapeWord(expand('<cword>')))
+"""
 
 " Omnicomplete
 set omnifunc=syntaxcomplete#Complete
@@ -89,15 +106,11 @@ call plug#begin("~/.vim/plugged")
     Plug 'mattn/vim-lsp-settings'
     Plug 'prabirshrestha/asyncomplete.vim'
     Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
     Plug 'ervandew/supertab'
-    Plug 'Tetralux/odin.vim'
-    Plug 'jpalardy/vim-slime'
-    Plug 'klafyvel/vim-slime-cells'
-    Plug 'psf/black', { 'branch': 'stable' }
-    Plug 'fisadev/vim-isort'
-    Plug 'JuliaEditorSupport/julia-vim' 
-    Plug 'machakann/vim-lsp-julia'
-call plug#end()
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " see: https://github.com/iamcco/markdown-preview.nvim/issues/50
+    call plug#end()
 
 """ vim-flagship
 set laststatus=2
@@ -114,64 +127,45 @@ let g:lsp_diagnostics_echo_cursor = 1
 """ vim-lsp configuration
 
 " Shift+k to display function documentation
-nnoremap <S-k> :LspHover<CR>
-
-""" Python tools
-" https://github.com/psf/black/issues/655
-" let g:black_virtualenv = "$HOME/.base"
-" Black
-augroup black_on_save
-  autocmd!
-  autocmd BufWritePre *.py Black
-augroup end
-" 
-" Pylint
-set makeprg=pylint\ --reports=n\ --output-format=parseable\ %:p
-set errorformat=%f:%l:\ %m
-"
-autocmd BufWritePost *.py !isort <afile>
-autocmd BufWritePost *.py !mypy <afile>
-autocmd FileType python setlocal omnifunc=lsp#complete
-""" Python tools
-
-""" vim-slime
-let g:slime_target = "tmux"
-let g:slime_dont_ask_default = 1
-nmap <c-c>v <Plug>SlimeConfig
-let g:slime_cell_delimiter = "# %%"
-" FIXME:
-" augroup SlimeCellDelimiter
-"     autocmd!
-"     " For Python files
-"     autocmd FileType python let g:slime_cell_delimiter = "# %%"
-"     " For Julia  files
-"     autocmd FileType julia let g:slime_cell_delimiter = "##"
-" augroup END
-let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.1"}
-let g:slime_bracketed_paste = 0 " Disabled to avoid ipython issues
-function! _EscapeText_python(text)
-  if slime#config#resolve("python_ipython") && len(split(a:text,"\n")) > 1
-    return ["%cpaste -q\n", slime#config#resolve("dispatch_ipython_pause"), a:text, "--\n"]
-  else
-    let empty_lines_pat = '\(^\|\n\)\zs\(\s*\n\+\)\+'
-    let no_empty_lines = substitute(a:text, empty_lines_pat, "", "g")
-    let dedent_pat = '\(^\|\n\)\zs'.matchstr(no_empty_lines, '^\s*')
-    let dedented_lines = substitute(no_empty_lines, dedent_pat, "", "g")
-    let except_pat = '\(elif\|else\|except\|finally\)\@!'
-    let add_eol_pat = '\n\s[^\n]\+\n\zs\ze\('.except_pat.'\S\|$\)'
-    return substitute(dedented_lines, add_eol_pat, "\n", "g")
-  end
-endfunction
-""" vim-slime
-
-""" vim-slime-cells
-nmap <c-c><c-c> <Plug>SlimeCellsSendAndGoToNext
-nmap <c-c><c-Down> <Plug>SlimeCellsNext
-nmap <c-c><c-Up> <Plug>SlimeCellsPrev
-""" vim-slime-cells
+" nnoremap <S-k> :LspHover<CR>
+nmap gh :LspHover<CR>
 
 " Tab for completion
 let g:SuperTabDefaultCompletionType = "<c-n>"
+
+
+"" Deno LSP Setup
+if executable('deno')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'deno',
+    \ 'cmd': {server_info->['deno', 'lsp']},
+    \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+    \ 'allowlist': ['typescript', 'typescript.tsx', 'typescriptreact', 'javascript', 'javascript.jsx', 'javascriptreact'],
+    \ 'initialization_options': {
+    \   'enable': v:true,
+    \   'lint': v:true,
+    \   'unstable': v:true,
+    \   'importMap': 'import_map.json',
+    \ },
+    \ })
+endif
+" LSP Keybindings
+nnoremap <silent> gd :LspDefinition<CR>
+nnoremap <silent> gD :LspDeclaration<CR>
+nnoremap <silent> gr :LspReferences<CR>
+nnoremap <silent> gi :LspImplementation<CR>
+nnoremap <silent> <leader>rn :LspRename<CR>
+nnoremap <silent> <leader>f :LspDocumentFormat<CR>
+" Asyncomplete setup
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,preview
+" Optional: Close preview window after completion
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"" Deno LSP Setup
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -246,7 +240,7 @@ if has("gui_macvim")
 endif
 
 " Add a bit extra margin to the left
-set foldcolumn=1
+" set foldcolumn=1
 
 " Relative numbers
 set relativenumber
@@ -349,7 +343,7 @@ set tw=500
 
 set ai "Auto indent
 set si "Smart indent
-" set wrap "Wrap lines
+set wrap "Wrap lines
 
 
 """"""""""""""""""""""""""""""
