@@ -58,27 +58,11 @@ nmap <leader>w :w!<cr>
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
 """ Highlight on hover 
-" set updatetime=1000
-" autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
-" autocmd CursorHold,CursorHoldI * match none
+set updatetime=1000
+autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+autocmd CursorHold,CursorHoldI * match none
 """ Highlight on hover 
 
-"""
-" Define a custom highlight group with a pale grey background
-highlight PaleGreyHighlight ctermbg=254 guibg=#e4e4e4
-" Set updatetime for responsiveness (1000ms = 1 second)
-set updatetime=1000
-" Function to escape special characters in the word
-function! EscapeWord(word)
-    return escape(a:word, '/\.*$^~[]')
-endfunction
-" Highlight word under cursor with pale grey
-autocmd CursorMoved * exe printf('match PaleGreyHighlight /\V\<%s\>/', EscapeWord(expand('<cword>')))
-" Clear highlight when cursor stops moving
-autocmd CursorHold,CursorHoldI * match none
-" Optionally, you can add these lines to make the highlight update more frequently in insert mode
-autocmd CursorMovedI * exe printf('match PaleGreyHighlight /\V\<%s\>/', EscapeWord(expand('<cword>')))
-"""
 
 " Omnicomplete
 set omnifunc=syntaxcomplete#Complete
