@@ -132,6 +132,7 @@ if executable('deno')
     \   'importMap': 'import_map.json',
     \ },
     \ })
+  let g:lsp_settings_filetype_typescript = ['typescript-language-server', 'eslint-language-server', 'deno']
 endif
 " LSP Keybindings
 nnoremap <silent> gd :LspDefinition<CR>
@@ -146,6 +147,9 @@ set completeopt=menuone,noinsert,noselect,preview
 " Optional: Close preview window after completion
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 " Ultisnips
+inoremap <silent><expr> <Tab> pumvisible()
+  \ ? UltiSnips#CanExpandSnippet() ? "\<C-r>=UltiSnips#ExpandSnippet()<CR>" : "\<C-y>"
+  \ : "\<Tab>"
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
