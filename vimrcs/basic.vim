@@ -79,7 +79,7 @@ endif
 
 call plug#begin("~/.vim/plugged")
     Plug 'ap/vim-css-color'
-    Plug 'junegunn/seoul256.vim'
+    Plug 'joshdick/onedark.vim'
     Plug 'machakann/vim-highlightedyank'
     Plug 'tpope/vim-surround' 
     Plug 'tpope/vim-fugitive'
@@ -281,12 +281,17 @@ elseif has("termguicolors")
 endif
 
 set background=dark
-" seoul256 (dark):
-"   Range:   233 (darkest) ~ 239 (lightest)
-"   Default: 237
-let g:seoul256_background = 233 
-let g:seoul256_srgb = 0
-colorscheme seoul256
+let g:onedark_termcolors=256
+" Before colorscheme onedark
+" let g:onedark_color_overrides = {
+" \ "background": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
+" \ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
+" \}
+let g:lightline = {
+  \ 'colorscheme': 'onedark',
+  \ }
+let g:airline_theme='onedark'
+colorscheme onedark
 
 " Set extra options when running in GUI mode
 if has("gui_running")
