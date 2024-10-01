@@ -118,7 +118,11 @@ nmap gh :LspHover<CR>
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 
-"" Deno LSP Setup
+"" Elixir setup
+autocmd BufWritePre *.ex,*.exs execute "!mix format %"
+""
+
+"" Deno setup
 if executable('deno')
   au User lsp_setup call lsp#register_server({
     \ 'name': 'deno',
@@ -153,7 +157,8 @@ inoremap <silent><expr> <Tab> pumvisible()
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"" Deno LSP Setup
+autocmd BufWritePre *.ts,*.js execute "!deno fmt %" 
+"" Deno setup
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -247,7 +252,7 @@ endif
 set mouse=a
 
 " Code folding
-set foldmethod=indent " choices are: default|indent|syntax
+set foldmethod=indent " choices are: manual|indent|syntax|marker|expr
 
 " Automatic bracket close
 inoremap " ""<left>
