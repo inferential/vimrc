@@ -144,7 +144,9 @@ nnoremap <silent> gD :LspDeclaration<CR>
 nnoremap <silent> gr :LspReferences<CR>
 nnoremap <silent> gi :LspImplementation<CR>
 nnoremap <silent> <leader>rn :LspRename<CR>
-nnoremap <silent> <leader>f :LspDocumentFormat<CR>
+" nnoremap <silent> <leader>f :LspDocumentFormat<CR>
+let g:lsp_format_sync_timeout = 1000
+autocmd! BufWritePre *.ts,*.js call execute('LspDocumentFormatSync')
 " Asyncomplete setup
 let g:asyncomplete_auto_completeopt = 0
 set completeopt=menuone,noinsert,noselect,preview
@@ -157,7 +159,7 @@ inoremap <silent><expr> <Tab> pumvisible()
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-autocmd BufWritePre *.ts,*.js execute "!deno fmt %" 
+let g:markdown_fenced_languages = ['ts=typescript'] " https://mattn.github.io/vim-lsp-settings/
 "" Deno setup
 
 
@@ -252,7 +254,10 @@ endif
 set mouse=a
 
 " Code folding
-set foldmethod=indent " choices are: manual|indent|syntax|marker|expr
+" set foldmethod=indent " choices are: manual|indent|syntax|marker|expr
+set foldmethod=expr
+  \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  \ foldtext=lsp#ui#vim#folding#foldtext()
 
 " Automatic bracket close
 inoremap " ""<left>
