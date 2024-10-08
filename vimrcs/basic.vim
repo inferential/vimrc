@@ -86,6 +86,8 @@ call plug#begin("~/.vim/plugged")
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-flagship'
     Plug 'tpope/vim-jdaddy' " `aj` provides a text object for the outermost JSON object, array, string, number, or keyword. `gqaj` pretty prints (wraps/indents/sorts keys/otherwise cleans up) the JSON construct under the cursor. `gwaj` takes the JSON object on the clipboard and extends it into the JSON object under the cursor.
+    Plug 'preservim/nerdtree'
+    Plug 'preservim/tagbar'
     Plug 'prabirshrestha/vim-lsp'
     Plug 'mattn/vim-lsp-settings'
     Plug 'prabirshrestha/asyncomplete.vim'
@@ -101,6 +103,33 @@ set laststatus=2
 set showtabline=2
 set guioptions-=e
 """ vim-flagship
+
+""" NERDTree
+" Start NERDTree and put the cursor back in the other window.
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+" autocmd VimEnter * NERDTree | wincmd p
+let g:NERDTreeFileLines = 1
+"""
+
+""" tagbar
+nmap <F8> :TagbarToggle<CR>
+" https://github.com/preservim/tagbar/blob/d55d454bd3d5b027ebf0e8c75b8f88e4eddad8d8/doc/tagbar.txt#L512
+let g:tagbar_left = 1
+let g:tagbar_autoclose = 0
+let g:tagbar_autofocus = 1 " If you set this option the cursor will move to the Tagbar window when it is opened
+let g:tagbar_compact = 1 " 0: Show short help and blank lines between top-level scopes
+                         " 1: Don't show the short help or the blank lines.
+                         " 2: Don't show the short help but show the blank lines.
+let g:tagbar_show_data_type = 1
+let g:tagbar_show_linenumbers = 1
+" let g:tagbar_iconchars = ['▶', '▼']  (default on Linux and Mac OS X)
+let g:tagbar_iconchars = ['▸', '▾']
+" let g:tagbar_iconchars = ['▷', '◢']
+autocmd BufEnter * nested :call tagbar#autoopen(0)
+"""
 
 """ vim-lsp configuration
 let g:asyncomplete_auto_popup = 1
@@ -168,6 +197,10 @@ let g:markdown_fenced_languages = ['ts=typescript'] " https://mattn.github.io/vi
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
+
+" Indentation guide
+set cursorcolumn
+set cursorline
 
 " Avoid garbled characters in Chinese language windows OS
 let $LANG='en'
