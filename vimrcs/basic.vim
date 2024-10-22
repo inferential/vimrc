@@ -80,6 +80,7 @@ endif
 call plug#begin("~/.vim/plugged")
     Plug 'ap/vim-css-color'
     Plug 'joshdick/onedark.vim'
+    Plug 'lunacookies/vim-colors-xcode'
     Plug 'machakann/vim-highlightedyank'
     Plug 'tpope/vim-surround' 
     Plug 'tpope/vim-fugitive'
@@ -96,6 +97,7 @@ call plug#begin("~/.vim/plugged")
     Plug 'honza/vim-snippets'
     Plug 'ervandew/supertab'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " see: https://github.com/iamcco/markdown-preview.nvim/issues/50
+    Plug 'wolandark/vim-piper'
     call plug#end()
 
 """ vim-flagship
@@ -119,14 +121,14 @@ nmap <F8> :TagbarToggle<CR>
 " https://github.com/preservim/tagbar/blob/d55d454bd3d5b027ebf0e8c75b8f88e4eddad8d8/doc/tagbar.txt#L512
 let g:tagbar_left = 1
 let g:tagbar_autoclose = 0
-let g:tagbar_autofocus = 1 " If you set this option the cursor will move to the Tagbar window when it is opened
+let g:tagbar_autofocus = 0 " If you set this option the cursor will move to the Tagbar window when it is opened
 let g:tagbar_compact = 1 " 0: Show short help and blank lines between top-level scopes
                          " 1: Don't show the short help or the blank lines.
                          " 2: Don't show the short help but show the blank lines.
 let g:tagbar_show_data_type = 1
 let g:tagbar_show_linenumbers = 1
-" let g:tagbar_iconchars = ['▶', '▼']  (default on Linux and Mac OS X)
-let g:tagbar_iconchars = ['▸', '▾']
+let g:tagbar_iconchars = ['▶', '▼']  " (default on Linux and Mac OS X)
+" let g:tagbar_iconchars = ['▸', '▾']
 " let g:tagbar_iconchars = ['▷', '◢']
 autocmd BufEnter * nested :call tagbar#autoopen(0)
 """
@@ -143,13 +145,16 @@ let g:lsp_diagnostics_echo_cursor = 1
 " nnoremap <S-k> :LspHover<CR>
 nmap gh :LspHover<CR>
 
-" Tab for completion
+" <Tab> for completion
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
+""" piper TTS
+let g:piper_bin = 'piperTTS'
+let g:piper_voice = '/usr/share/piper-voices/alba.onnx'
+"""
 
-"" Elixir setup
+" Elixir setup
 autocmd BufWritePre *.ex,*.exs execute "!mix format %"
-""
 
 "" Deno setup
 if executable('deno')
@@ -311,6 +316,8 @@ syntax enable
 set regexpengine=0
 
 " Enable 256 colour palette in Gnome Terminal
+set tabline=
+
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
@@ -323,26 +330,31 @@ elseif has("termguicolors")
         set termguicolors
 endif
 
+" colorscheme xcodedark " xcodehc
+""" onedark
 set background=dark
 let g:onedark_termcolors=256
-" Before colorscheme onedark
-" let g:onedark_color_overrides = {
-" \ "background": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
-" \ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
-" \}
+" !Before colorscheme onedark!
+let g:onedark_color_overrides = {
+            \ "gutter_fg_grey": {"gui": "#BEBEBE" , "cterm": "NONE" , "cterm16": "NONE"}, 
+            \ "comment_grey": {"gui": "#808080" , "cterm": "NONE" , "cterm16": "NONE"},
+            \}
+
 let g:lightline = {
   \ 'colorscheme': 'onedark',
   \ }
 let g:airline_theme='onedark'
 colorscheme onedark
+""" onedark
 
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
-endif
+""" Set extra options when running in GUI mode
+" if has("gui_running")
+"     set guioptions-=T
+"     set guioptions-=e
+"     set t_Co=256
+"     set guitablabel=%M\ %t
+" endif
+""" Set extra options when running in GUI mode
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
