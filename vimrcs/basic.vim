@@ -148,9 +148,14 @@ nmap gh :LspHover<CR>
 " <Tab> for completion
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
-""" piper TTS
+"Plug 'wolandark/vim-piper'"" piper TTS
 let g:piper_bin = 'piperTTS'
 let g:piper_voice = '/usr/share/piper-voices/alba.onnx'
+nnoremap tw :call SpeakWord()
+nnoremap tc :call SpeakCurrentLine()
+nnoremap tp :call SpeakCurrentParagraph()
+nnoremap tf :call SpeakCurrentFile()
+vnoremap tv :call SpeakVisualSelection()
 """
 
 " Elixir setup
