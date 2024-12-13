@@ -98,6 +98,13 @@ call plug#begin("~/.vim/plugged")
     Plug 'ervandew/supertab'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']} " see: https://github.com/iamcco/markdown-preview.nvim/issues/50
     Plug 'wolandark/vim-piper'
+    "" Clojure setup
+    Plug 'tpope/vim-fireplace' " Clojure support and REPL integration
+    Plug 'ctrlpvim/ctrlp.vim' " Fuzzy file, buffer, mru, tag, etc finder. 
+    Plug 'guns/vim-sexp',    {'for': 'clojure'} " Required
+    Plug 'liquidz/vim-iced', {'for': 'clojure'} " Required 
+    Plug 'liquidz/vim-iced-asyncomplete', {'for': 'clojure'} " Autocomplete for vim-iced
+    ""
     call plug#end()
 
 """ vim-flagship
@@ -200,6 +207,10 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:markdown_fenced_languages = ['ts=typescript'] " https://mattn.github.io/vim-lsp-settings/
 "" Deno setup
+
+"" Vim-iced
+let g:iced_enable_default_key_mappings = v:true
+"" Vim-iced 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
