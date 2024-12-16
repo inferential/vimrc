@@ -105,6 +105,7 @@ call plug#begin("~/.vim/plugged")
     Plug 'liquidz/vim-iced', {'for': 'clojure'} " Required 
     Plug 'liquidz/vim-iced-asyncomplete', {'for': 'clojure'} " Autocomplete for vim-iced
     ""
+    Plug 'github/copilot.vim'
     call plug#end()
 
 """ vim-flagship
