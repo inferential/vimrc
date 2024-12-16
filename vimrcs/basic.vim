@@ -211,8 +211,14 @@ let g:markdown_fenced_languages = ['ts=typescript'] " https://mattn.github.io/vi
 
 "" Vim-iced
 let g:iced_enable_default_key_mappings = v:true
-"" Vim-iced 
 
+"" GitHub Copilot
+let g:copilot_filetypes = {
+            \ '*': v:false,
+            \ 'python': v:true,
+            \ 'typescript': v:true,
+            \ 'clojure': v:true,
+            \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
